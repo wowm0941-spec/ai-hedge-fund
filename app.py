@@ -243,7 +243,16 @@ def show_stock_lab():
     # returns
     ret = price.pct_change().dropna()
     st.metric("Volatilität (ann.)", f"{ret.std()*np.sqrt(252):.2%}")
-    st.metric("YTD", f"{(price.iloc[-1]/price[price.index.year==datetime.now().year][0]-1 if len(price[price.index.year==datetime.now().year)>0 else 0):.2%}" if False else f"{(price.iloc[-1]/price.iloc[0]-1):.2%}")
+# YTD sauber berechnen
+current_year = datetime.now().year
+ytd_data = price[price.index.year == current_year]
+
+if len(ytd_data) > 0:
+    ytd_return = price.iloc[-1] / ytd_data.iloc[0] - 1
+else:
+    ytd_return = price.iloc[-1] / price.iloc[0] - 1
+
+st.metric("YTD", f"{ytd_return:.2%}")
     # download CSV
     csv = price.to_csv().encode()
     st.download_button(label="Download Preis CSV", data=csv, file_name=f"{sel}_prices.csv", mime="text/csv")

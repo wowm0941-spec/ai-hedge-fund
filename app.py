@@ -253,9 +253,13 @@ else:
     ytd_return = price.iloc[-1] / price.iloc[0] - 1
 
 st.metric("YTD", f"{ytd_return:.2%}")
-    # download CSV
     csv = price.to_csv().encode()
-    st.download_button(label="Download Preis CSV", data=csv, file_name=f"{sel}_prices.csv", mime="text/csv")
+    st.download_button(
+      label="Download Preis CSV",
+      data=csv,
+      file_name=f"{sel}_prices.csv",
+      mime="text/csv"
+    )
 
 # --------------------
 # Smart Index Builder (decompose & build index of top performers)
